@@ -1,6 +1,7 @@
 package org.example.chessgamejava.figures;
 
 import javafx.util.Pair;
+import org.example.chessgamejava.IBoard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,29 +26,51 @@ public class Pawn extends ChessFigure {
     }
 
     @Override
-    public boolean canMove(int x, int y) {
+    public boolean canMove(int x, int y, IBoard board) {
+        if (!super.canMove(x, y, board)) {
+            return false;
+        }
+
         int dx = x - getX();
         int dy = y - getY();
-        if (getColor()) {
-            if (dx == 0 && dy == 1) {
-                return true;
-            }
-            return firstMove && dx == 0 && dy == 2;
-        } else {
-            if (dx == 0 && dy == -1) {
-                return true;
-            }
-            return firstMove && dx == 0 && dy == -2;
+        int maxStep = firstMove ? 2 : 1;
+
+        if (Math.abs(dx) > 0 && Math.abs(dy) > 1) {
+            return false;
         }
+
+        if (Math.abs(dx) > 1 || Math.abs(dy) > maxStep) {
+            return false;
+        }
+
+        if(Math.signum(dy) != (getColor() ? 1 : -1))
+            return false;
+
+        var cell = board.getCell(x, y);
+        if (dx == 0 && cell.getKey() != IBoard.CellFill.EMPTY) {
+            return false;
+        }
+
+        if(dx != 0 && cell.getKey() == IBoard.CellFill.EMPTY)
+            return false;
+
+        cell = board.getCell(this.getX(), this.getY() + (getColor() ? 1 : -1));
+        if (Math.abs(dy) != 1 && cell.getKey() != IBoard.CellFill.EMPTY)
+            return false;
+
+        return true;
     }
 
     @Override
-    public List<Pair<Integer, Integer>> getTiles(int x, int y) {
-        if (!canMove(x, y)) {
+    public List<Pair<Integer, Integer>> getTiles(int x, int y, IBoard board) {
+        if (!canMove(x, y, board)) {
             throw new IllegalArgumentException("Pawn can't move to this tile");
         }
-        var result = new ArrayList<Pair<Integer, Integer>>();
-        result.add(new Pair<>(x, y));
-        return result;
+        return new ArrayList<>();
+    }
+
+    @Override
+    public IBoard.Figure getType() {
+        return IBoard.Figure.PAWN;
     }
 }

@@ -1,11 +1,14 @@
 package org.example.chessgamejava.figures;
 
 import javafx.util.Pair;
+import org.example.chessgamejava.IBoard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class King extends ChessFigure {
+    private boolean firstMove = true;
+
     public King(boolean color, int x, int y) {
         super(color, x, y);
     }
@@ -16,19 +19,32 @@ public class King extends ChessFigure {
     }
 
     @Override
-    public boolean canMove(int x, int y) {
+    public void move(int x, int y) {
+        super.move(x, y);
+        firstMove = false;
+    }
+
+    @Override
+    public boolean canMove(int x, int y, IBoard board) {
+        if (!super.canMove(x, y, board)) {
+            return false;
+        }
+
         int dx = x - getX();
         int dy = y - getY();
         return Math.abs(dx) <= 1 && Math.abs(dy) <= 1;
     }
 
     @Override
-    public List<Pair<Integer, Integer>> getTiles(int x, int y) {
-        if (!canMove(x, y)) {
+    public List<Pair<Integer, Integer>> getTiles(int x, int y, IBoard board) {
+        if (!canMove(x, y, board)) {
             throw new IllegalArgumentException("King can't move to this tile");
         }
-        var tiles = new ArrayList<Pair<Integer, Integer>>();
-        tiles.add(new Pair<>(x, y));
-        return tiles;
+        return new ArrayList<>();
+    }
+
+    @Override
+    public IBoard.Figure getType() {
+        return IBoard.Figure.KING;
     }
 }

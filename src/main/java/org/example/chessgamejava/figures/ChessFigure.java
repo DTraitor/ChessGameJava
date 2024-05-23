@@ -1,6 +1,7 @@
 package org.example.chessgamejava.figures;
 
 import javafx.util.Pair;
+import org.example.chessgamejava.IBoard;
 
 import java.util.List;
 
@@ -34,11 +35,10 @@ public abstract class ChessFigure {
         this.y = y;
     }
 
-    public abstract boolean canMove(int x, int y);
-    public abstract List<Pair<Integer, Integer>> getTiles(int x, int y);
-    public List<Pair<Integer, Integer>> getMoveTiles(int x, int y) {
-        var result = getTiles(x, y);
-        result.removeLast();
-        return result;
+    public boolean canMove(int x, int y, IBoard board){
+        return board.getCell(x, y).getKey() != (getColor() ? IBoard.CellFill.WHITE : IBoard.CellFill.BLACK);
     }
+    public abstract List<Pair<Integer, Integer>> getTiles(int x, int y, IBoard board);
+
+    public abstract IBoard.Figure getType();
 }

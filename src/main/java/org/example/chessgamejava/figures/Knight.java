@@ -1,6 +1,7 @@
 package org.example.chessgamejava.figures;
 
 import javafx.util.Pair;
+import org.example.chessgamejava.IBoard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,20 +17,27 @@ public class Knight extends ChessFigure {
     }
 
     @Override
-    public boolean canMove(int x, int y) {
+    public boolean canMove(int x, int y, IBoard board) {
+        if (!super.canMove(x, y, board)) {
+            return false;
+        }
+
         int dx = x - getX();
         int dy = y - getY();
         return (Math.abs(dx) == 2 && Math.abs(dy) == 1) || (Math.abs(dx) == 1 && Math.abs(dy) == 2);
     }
 
     @Override
-    public List<Pair<Integer, Integer>> getTiles(int x, int y) {
-        if (!canMove(x, y)) {
+    public List<Pair<Integer, Integer>> getTiles(int x, int y, IBoard board) {
+        if (!canMove(x, y, board)) {
             throw new IllegalArgumentException("Knight can't move to this tile");
         }
 
-        var result = new ArrayList<Pair<Integer, Integer>>();
-        result.add(new Pair<>(x, y));
-        return result;
+        return new ArrayList<>();
+    }
+
+    @Override
+    public IBoard.Figure getType() {
+        return IBoard.Figure.KNIGHT;
     }
 }

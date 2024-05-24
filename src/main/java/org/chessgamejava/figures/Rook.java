@@ -24,7 +24,7 @@ public class Rook extends ChessFigure {
 
         int dx = x - getX();
         int dy = y - getY();
-        if(dx != 0 && dy == 0)
+        if(dx != 0 && dy != 0)
             return false;
 
         int stepX = Integer.compare(dx, 0);

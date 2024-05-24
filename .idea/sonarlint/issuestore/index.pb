@@ -158,3 +158,5 @@ Q.idea/sonarlint/securityhotspotstore/1/f/1f1763f358c257ea3515417352b82b0165647a
 Q.idea/sonarlint/securityhotspotstore/9/c/9c8a127ab3f6bf3078ab6a36a1c14fd5bb549285,0\6\069dd0a3eb8aac0aeb208ccf08d24c4fa0351a19
 Å
 Q.idea/sonarlint/securityhotspotstore/9/f/9fe84ebb15faf917b7def6236dba604453cc61e0,b\b\bbf202272a96de5cd6b6828ffdc55fb3ce45289c
+p
+@src/test/java/org/example/chessgamejava/figures/FigureTests.java,1\a\1a7cafd8514953ff12bdb1c7f074d23f39d15e30

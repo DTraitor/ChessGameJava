@@ -1,8 +1,12 @@
 package org.example.chessgamejava;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
@@ -12,8 +16,10 @@ import org.example.chessgamejava.patterns.memento.MoveHistory;
 import org.example.chessgamejava.patterns.state.*;
 
 import java.io.File;
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 public class HelloController implements IBoard {
     @FXML
@@ -28,10 +34,38 @@ public class HelloController implements IBoard {
     private Label totalMoves;
     @FXML
     private Label figuresKilled;
+    @FXML
+    private TextField timerField;
+    @FXML
+    private CheckBox timerCheckbox;
+    @FXML
+    private Label timerOne;
+    @FXML
+    private Label timerTwo;
     private LocalDateTime startTime;
+    private LocalDateTime lastTickerUpdate = LocalDateTime.now();
+    private boolean timerRunning = false;
+    private Duration playerOneTimeLeft = Duration.ofSeconds(-1);
+    private Duration playerTwoTimeLeft = Duration.ofSeconds(-1);
+
+    @FXML
+    private void onCheckTimer(){
+        timerField.setDisable(!timerCheckbox.isSelected());
+    }
+
+    @FXML
+    private void onRestartGame(){
+        restartGame();
+    }
 
     @FXML
     protected void initialize() {
+        timerField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("([0-5]?\\d|60):([0-5]?\\d|60)")) {
+                timerField.setText(oldValue);
+            }
+        });
+
         playerTurn = new WhiteTurn();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -59,9 +93,66 @@ public class HelloController implements IBoard {
                 long minutes = delta / 60;
                 long seconds = delta % 60;
                 totalTime.setText("Total time: " + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+
+                if (timerRunning) {
+                    if (playerTurn instanceof WhiteTurn) {
+                        playerOneTimeLeft = playerOneTimeLeft.minus(java.time.Duration.between(lastTickerUpdate, currentTime));
+                        if (playerOneTimeLeft.getSeconds() <= 0) {
+                            playerTurn = new BlackWin();
+                            turnLabel.setText(playerTurn.getText());
+                            timerRunning = false;
+                        }
+                    } else {
+                        playerTwoTimeLeft = playerTwoTimeLeft.minus(java.time.Duration.between(lastTickerUpdate, currentTime));
+                        if (playerTwoTimeLeft.getSeconds() <= 0) {
+                            playerTurn = new WhiteWin();
+                            turnLabel.setText(playerTurn.getText());
+                            timerRunning = false;
+                        }
+                    }
+                    //get seconds returns total seconds, so we need to get minutes and seconds separately
+                    minutes = playerOneTimeLeft.getSeconds() / 60;
+                    seconds = playerOneTimeLeft.getSeconds() % 60;
+                    timerOne.setText("White: " + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+
+                    minutes = playerTwoTimeLeft.getSeconds() / 60;
+                    seconds = playerTwoTimeLeft.getSeconds() % 60;
+                    timerTwo.setText("Black: " + minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+                }
+                lastTickerUpdate = currentTime;
             }
         };
         timer.start();
+    }
+
+    private void restartGame(){
+        startTime = LocalDateTime.now();
+        moves = 0;
+        killed = 0;
+        moveHistory.getChildren().clear();
+        resetFigures();
+        drawFigures();
+        playerTurn = new WhiteTurn();
+        turnLabel.setText(playerTurn.getText());
+        totalTime.setText("Total time: 0:00");
+        totalMoves.setText("Total moves: 0");
+        figuresKilled.setText("Figures killed: 0");
+
+        if (timerCheckbox.isSelected()) {
+            timerRunning = true;
+            String[] time = timerField.getText().split(":");
+            long minutes = Long.parseLong(time[0]);
+            long seconds = Long.parseLong(time[1]);
+            playerOneTimeLeft = Duration.ofSeconds(minutes * 60L + seconds);
+            playerTwoTimeLeft = Duration.ofSeconds(minutes * 60L + seconds);
+        }
+        else {
+            timerRunning = false;
+            playerOneTimeLeft = Duration.ofSeconds(-1);
+            playerTwoTimeLeft = Duration.ofSeconds(-1);
+            timerOne.setText("White: Unlimited Time");
+            timerTwo.setText("Black: Unlimited Time");
+        }
     }
 
     private void colourCells(){
@@ -222,10 +313,14 @@ public class HelloController implements IBoard {
                 }
             }
         }
-        if (!whiteKing)
+        if (!whiteKing){
             playerTurn = new BlackWin();
-        if (!blackKing)
+            timerRunning = false;
+        }
+        if (!blackKing) {
             playerTurn = new WhiteWin();
+            timerRunning = false;
+        }
 
         boolean colour = playerTurn instanceof WhiteTurn;
         for(Cell[] row : board){
@@ -243,6 +338,7 @@ public class HelloController implements IBoard {
         }
 
         playerTurn = new Draw();
+        timerRunning = false;
     }
 
     @FXML
@@ -253,7 +349,7 @@ public class HelloController implements IBoard {
         }
 
         moveHistory.getChildren().clear();
-        String gameState = history.loadFromFile(savePath);
+        MoveHistory.GameData gameState = history.loadFromFile(savePath);
         resetFigures();
 
         for (ChessMoveMemento memento : history) {
@@ -267,7 +363,7 @@ public class HelloController implements IBoard {
 
         drawFigures();
 
-        switch (gameState) {
+        switch (gameState.state) {
             case "White's turn":
                 playerTurn = new WhiteTurn();
                 break;
@@ -284,12 +380,27 @@ public class HelloController implements IBoard {
                 playerTurn = new Draw();
                 break;
         }
+
+        startTime = LocalDateTime.now().minusSeconds(gameState.time);
+        playerOneTimeLeft = Duration.ofSeconds(gameState.player1Time);
+        playerTwoTimeLeft = Duration.ofSeconds(gameState.player2Time);
+        timerRunning = gameState.timed;
+
         turnLabel.setText(playerTurn.getText());
+        totalMoves.setText("Total moves: " + moves);
+        figuresKilled.setText("Figures killed: " + killed);
+
     }
 
     @FXML
     private void onSaveGame() {
-        history.saveToFile(savePath, playerTurn);
+        MoveHistory.GameData data = new MoveHistory.GameData();
+        data.state = playerTurn.getText();
+        data.time = Duration.between(startTime, LocalDateTime.now()).getSeconds();
+        data.timed = timerRunning;
+        data.player1Time = playerOneTimeLeft.getSeconds();
+        data.player2Time = playerTwoTimeLeft.getSeconds();
+        history.saveToFile(savePath, data);
     }
 
     private String generateMoveText(int x1, int y1, int x2, int y2){

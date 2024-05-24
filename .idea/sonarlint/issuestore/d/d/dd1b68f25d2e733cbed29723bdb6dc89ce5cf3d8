@@ -1,6 +1,14 @@
 
+t
+java:S3776>"RRefactor this method to reduce its Cognitive Complexity from 30 to the 15 allowed.(±è®»üÿÿÿÿ8õÃ¡Ôú1
 u
-java:S3776Ô"RRefactor this method to reduce its Cognitive Complexity from 36 to the 15 allowed.(¸É²Èüÿÿÿÿ8ÛÒõ¸ú1
-D	java:S131""Add a default case to this switch.(‹Á‹£ûÿÿÿÿ8âÒõ¸ú1
+java:S3776¯"RRefactor this method to reduce its Cognitive Complexity from 36 to the 15 allowed.(¸É²Èüÿÿÿÿ8ÚÄ¡Ôú1
+?	java:S131î""Add a default case to this switch.(—¼Ö8˜Å¡Ôú1
+[
+java:S1128">Remove this unused import 'javafx.beans.value.ChangeListener'.(¸÷Í8¬Å¡Ôú1
 \
-java:S1128"?Remove this unused import 'java.time.format.DateTimeFormatter'.(‰÷÷ª8æÒõ¸ú1
+java:S1128"?Remove this unused import 'javafx.beans.value.ObservableValue'.(´œ«Å8­Å¡Ôú1
+W
+java:S1128":Remove this unused import 'java.time.temporal.ChronoUnit'.(Á…§8­Å¡Ôú1
+^
+java:S1128"<Remove this unused import 'java.time.temporal.TemporalUnit'.(¨çùÿÿÿÿÿÿ8®Å¡Ôú1

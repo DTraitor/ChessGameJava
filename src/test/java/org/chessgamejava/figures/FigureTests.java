@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FigureTests {
-    private class TestBoard implements IBoard {
+    private static class TestBoard implements IBoard {
         @Override
         public Pair<CellFill, Figure> getCell(int x, int y) {
             return new Pair<>(CellFill.EMPTY, null);

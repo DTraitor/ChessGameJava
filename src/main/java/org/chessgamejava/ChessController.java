@@ -133,6 +133,8 @@ public class ChessController implements IBoard {
         totalTime.setText("Total time: 0:00");
         totalMoves.setText("Total moves: 0");
         figuresKilled.setText("Figures killed: 0");
+        selectedCell = null;
+        colourCells();
 
         if (timerCheckbox.isSelected()) {
             timerRunning = true;

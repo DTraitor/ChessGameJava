@@ -1,6 +1,4 @@
-package org.example.chessgamejava.patterns.memento;
-
-import org.example.chessgamejava.patterns.state.IGameState;
+package org.chessgamejava.patterns.memento;
 
 import java.io.FileWriter;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.example.chessgamejava.figures;
+package org.chessgamejava.figures;
 
 import org.junit.jupiter.api.Test;
 

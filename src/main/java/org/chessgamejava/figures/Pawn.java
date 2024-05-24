@@ -1,10 +1,9 @@
-package org.example.chessgamejava.figures;
+package org.chessgamejava.figures;
 
 import javafx.util.Pair;
-import org.example.chessgamejava.IBoard;
+import org.chessgamejava.IBoard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Pawn extends ChessFigure {

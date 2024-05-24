@@ -1,4 +1,4 @@
-package org.example.chessgamejava.patterns.memento;
+package org.chessgamejava.patterns.memento;
 
 public class ChessMoveMemento {
     private int x;

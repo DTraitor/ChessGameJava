@@ -1,6 +1,6 @@
-package org.example.chessgamejava.patterns.state;
+package org.chessgamejava.patterns.state;
 
-import org.example.chessgamejava.figures.ChessFigure;
+import org.chessgamejava.figures.ChessFigure;
 
 public interface IGameState {
     String getText();

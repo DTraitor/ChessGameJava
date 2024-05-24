@@ -1,4 +1,4 @@
-package org.example.chessgamejava;
+package org.chessgamejava;
 
 import javafx.util.Pair;
 

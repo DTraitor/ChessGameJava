@@ -1,7 +1,7 @@
-package org.example.chessgamejava;
+package org.chessgamejava;
 
 import javafx.scene.control.Label;
-import org.example.chessgamejava.figures.ChessFigure;
+import org.chessgamejava.figures.ChessFigure;
 
 public class Cell {
     public Label colour = null;

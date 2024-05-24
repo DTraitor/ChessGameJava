@@ -1,8 +1,6 @@
-package org.example.chessgamejava;
+package org.chessgamejava;
 
 import javafx.animation.AnimationTimer;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -10,18 +8,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
-import org.example.chessgamejava.figures.*;
-import org.example.chessgamejava.patterns.memento.ChessMoveMemento;
-import org.example.chessgamejava.patterns.memento.MoveHistory;
-import org.example.chessgamejava.patterns.state.*;
+import org.chessgamejava.figures.*;
+import org.chessgamejava.patterns.state.*;
+import org.chessgamejava.patterns.memento.ChessMoveMemento;
+import org.chessgamejava.patterns.memento.MoveHistory;
 
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
-public class HelloController implements IBoard {
+public class ChessController implements IBoard {
     @FXML
     private GridPane gameGrid;
     @FXML
